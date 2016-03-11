@@ -140,12 +140,12 @@ func TestValidateRoot(t *testing.T) {
 
 	// This call to ValidateRoot will succeed since we are using a valid PEM
 	// encoded certificate, and have no other certificates for this CN
-	err = ValidateRoot(certStore, &testSignedRoot, "docker.com/notary")
+	err = ValidateRoot(certStore, &testSignedRoot, "docker.com/notary", notary.TrustPinConfig{TOFU: true})
 	require.NoError(t, err)
 
 	// This call to ValidateRoot will fail since we are passing in a dnsName that
 	// doesn't match the CN of the certificate.
-	err = ValidateRoot(certStore, &testSignedRoot, "diogomonica.com/notary")
+	err = ValidateRoot(certStore, &testSignedRoot, "diogomonica.com/notary", notary.TrustPinConfig{TOFU: true})
 	require.Error(t, err, "An error was expected")
 	require.Equal(t, err, &ErrValidationFail{Reason: "unable to retrieve valid leaf certificates"})
 
@@ -159,7 +159,7 @@ func TestValidateRoot(t *testing.T) {
 	// Unmarshal our signedroot
 	json.Unmarshal(signedRootBytes.Bytes(), &testSignedRoot)
 
-	err = ValidateRoot(certStore, &testSignedRoot, "docker.com/notary")
+	err = ValidateRoot(certStore, &testSignedRoot, "docker.com/notary", notary.TrustPinConfig{TOFU: true})
 	require.Error(t, err, "illegal base64 data at input byte")
 
 	//
@@ -172,7 +172,7 @@ func TestValidateRoot(t *testing.T) {
 	// Unmarshal our signedroot
 	json.Unmarshal(signedRootBytes.Bytes(), &testSignedRoot)
 
-	err = ValidateRoot(certStore, &testSignedRoot, "docker.com/notary")
+	err = ValidateRoot(certStore, &testSignedRoot, "docker.com/notary", notary.TrustPinConfig{TOFU: true})
 	require.Error(t, err, "An error was expected")
 	require.Equal(t, err, &ErrValidationFail{Reason: "unable to retrieve valid leaf certificates"})
 
@@ -187,7 +187,7 @@ func TestValidateRoot(t *testing.T) {
 	// Unmarshal our signedroot
 	json.Unmarshal(signedRootBytes.Bytes(), &testSignedRoot)
 
-	err = ValidateRoot(certStore, &testSignedRoot, "docker.com/notary")
+	err = ValidateRoot(certStore, &testSignedRoot, "docker.com/notary", notary.TrustPinConfig{TOFU: true})
 	require.Error(t, err, "An error was expected")
 	require.Equal(t, err, &ErrValidationFail{Reason: "unable to retrieve valid leaf certificates"})
 
@@ -205,7 +205,7 @@ func TestValidateRoot(t *testing.T) {
 	// Unmarshal our signedroot
 	json.Unmarshal(signedRootBytes.Bytes(), &testSignedRoot)
 
-	err = ValidateRoot(certStore, &testSignedRoot, "secure.example.com")
+	err = ValidateRoot(certStore, &testSignedRoot, "secure.example.com", notary.TrustPinConfig{TOFU: true})
 	require.Error(t, err, "An error was expected")
 	require.Equal(t, err, &ErrValidationFail{Reason: "failed to validate integrity of roots"})
 }
@@ -298,7 +298,7 @@ func testValidateSuccessfulRootRotation(t *testing.T, keyAlg, rootKeyType string
 
 	// This call to ValidateRoot will succeed since we are using a valid PEM
 	// encoded certificate, and have no other certificates for this CN
-	err = ValidateRoot(certStore, signedTestRoot, gun)
+	err = ValidateRoot(certStore, signedTestRoot, gun, notary.TrustPinConfig{TOFU: true})
 	require.NoError(t, err)
 
 	// Finally, validate the only trusted certificate that exists is the new one
@@ -354,7 +354,7 @@ func testValidateRootRotationMissingOrigSig(t *testing.T, keyAlg, rootKeyType st
 
 	// This call to ValidateRoot will succeed since we are using a valid PEM
 	// encoded certificate, and have no other certificates for this CN
-	err = ValidateRoot(certStore, signedTestRoot, gun)
+	err = ValidateRoot(certStore, signedTestRoot, gun, notary.TrustPinConfig{TOFU: true})
 	require.Error(t, err, "insuficient signatures on root")
 
 	// Finally, validate the only trusted certificate that exists is still
@@ -413,7 +413,7 @@ func testValidateRootRotationMissingNewSig(t *testing.T, keyAlg, rootKeyType str
 
 	// This call to ValidateRoot will succeed since we are using a valid PEM
 	// encoded certificate, and have no other certificates for this CN
-	err = ValidateRoot(certStore, signedTestRoot, gun)
+	err = ValidateRoot(certStore, signedTestRoot, gun, notary.TrustPinConfig{TOFU: true})
 	require.Error(t, err, "insuficient signatures on root")
 
 	// Finally, validate the only trusted certificate that exists is still
