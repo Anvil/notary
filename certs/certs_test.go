@@ -398,9 +398,9 @@ func TestValidateRootWithPinnedCA(t *testing.T) {
 
 	store, err := trustmanager.NewKeyFileStore(tempBaseDir, passphraseRetriever)
 	assert.NoError(t, err)
-	cs := cryptoservice.NewCryptoService("notary-signer", store)
+	cs := cryptoservice.NewCryptoService(store)
 
-	err = store.AddKey(privKey.ID(), "root", privKey)
+	err = store.AddKey(trustmanager.KeyInfo{Role: data.CanonicalRootRole, Gun: "notary-signer"}, privKey)
 	assert.NoError(t, err)
 
 	newTestSignedRoot, err := testRoot.ToSigned()
