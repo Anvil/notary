@@ -59,10 +59,10 @@ of the notary client config.  If this section specifies a Certs section with thi
 GUN, we attempt to validate that the certificates present in the downloaded root
 file match the pinned ID.
 
-If the Certs section is empty are empty for this GUN, we check if the trust_pinning
+If the Certs section is empty for this GUN, we check if the trust_pinning
 section specifies a CA section specified in the config for this GUN.  If so, we check
 that the specified CA is valid and has signed a certificate included in the downloaded
-root file.
+root file.  The specified CA can be a prefix for this GUN.
 
 If both the Certs and CA configs do not match this GUN, we fall back to the TOFU
 section in the config: if true, we trust certificates specified in the root for

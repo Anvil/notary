@@ -412,7 +412,6 @@ func TestValidateRootWithPinnedCA(t *testing.T) {
 	// Check that we validate correctly against a pinned CA and provided bundle
 	err = ValidateRoot(certStore, newTestSignedRoot, "notary-signer", notary.TrustPinConfig{CA: map[string]string{"notary-signer": validCAFilepath}, TOFU: false})
 	assert.NoError(t, err)
-
 }
 
 // TestValidateSuccessfulRootRotation runs through a full root certificate rotation
