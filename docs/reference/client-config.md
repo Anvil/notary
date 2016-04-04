@@ -132,7 +132,7 @@ but the pinned certificates will take highest priority for validation, followed
 by the pinned CA, followed by TOFUS (TOFU over HTTPS).  The diagram below
 describes this validation flow:
 
-<center><img src="images/trust-pinning-flow.png" alt="Trust pinning flow" width="400px"/></center>
+<center><img src="../images/trust-pinning-flow.png" alt="Trust pinning flow" width="400px"/></center>
 
 Only one trust pinning option will be used to validate a GUN even if multiple
 sections are specified, and any validation failure will result in a failed
