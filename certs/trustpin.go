@@ -36,18 +36,18 @@ func NewTrustPinChecker(trustPinConfig notary.TrustPinConfig, gun string) (Trust
 
 	if caFilepath, err := trustPinChecker.getCAFilepathByPrefix(gun); err == nil {
 		trustPinChecker.mode = ca
-		// Try to add the CA cert to our certificate store,
+		// Try to add the CA certs from its bundle file to our certificate store,
 		// and use it to validate certs in the root.json later
-		caCert, err := trustmanager.LoadCertFromFile(caFilepath)
+		caCerts, err := trustmanager.LoadCertBundleFromFile(caFilepath)
 		if err != nil {
 			return TrustPinChecker{}, fmt.Errorf("could not load root cert from CA path")
 		}
-		if err = trustmanager.ValidateCertificate(caCert); err != nil {
+		if err = trustmanager.ValidateCertificate(caCerts); err != nil {
 			return TrustPinChecker{}, fmt.Errorf("invalid CA cert provided")
 		}
 		// Now only consider certificates that are direct children from this CA cert, overwriting allValidCerts
 		caRootPool := x509.NewCertPool()
-		caRootPool.AddCert(caCert)
+		caRootPool.AddCert(caCerts)
 		if err != nil {
 			return TrustPinChecker{}, fmt.Errorf("unable to initialize CA cert pool")
 		}
