@@ -14,10 +14,10 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/docker/notary"
-	"github.com/docker/notary/certs"
 	"github.com/docker/notary/client/changelist"
 	"github.com/docker/notary/cryptoservice"
 	"github.com/docker/notary/trustmanager"
+	"github.com/docker/notary/trustpinning"
 	"github.com/docker/notary/tuf"
 	tufclient "github.com/docker/notary/tuf/client"
 	"github.com/docker/notary/tuf/data"
@@ -862,7 +862,7 @@ func (r *NotaryRepository) validateRoot(rootJSON []byte) (*data.SignedRoot, erro
 		return nil, err
 	}
 
-	err = certs.ValidateRoot(r.CertStore, root, r.gun, r.trustPinning)
+	err = trustpinning.ValidateRoot(r.CertStore, root, r.gun, r.trustPinning)
 	if err != nil {
 		return nil, err
 	}
