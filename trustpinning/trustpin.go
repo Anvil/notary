@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/docker/notary"
 	"github.com/docker/notary/trustmanager"
+	"github.com/docker/notary/tuf/utils"
 	"strings"
 )
 
@@ -68,7 +69,7 @@ func (t TrustPinChecker) checkCert(leafCert *x509.Certificate, intCerts []*x509.
 		if err != nil {
 			return false
 		}
-		return t.config.Certs[t.gun] == certID
+		return utils.StrSliceContains(t.config.Certs[t.gun], certID)
 	case ca:
 		// Use intermediate certificates included in the root TUF metadata for our validation
 		caIntPool := x509.NewCertPool()
