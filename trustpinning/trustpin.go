@@ -47,9 +47,13 @@ func NewTrustPinChecker(trustPinConfig notary.TrustPinConfig, gun string) (Trust
 		caRootPool := x509.NewCertPool()
 		for _, caCert := range caCerts {
 			if err = trustmanager.ValidateCertificate(caCert); err != nil {
-				return TrustPinChecker{}, fmt.Errorf("invalid CA cert provided")
+				continue
 			}
 			caRootPool.AddCert(caCert)
+		}
+		// If we didn't have any valid CA certs, error out
+		if len(caRootPool.Subjects()) == 0 {
+			return TrustPinChecker{}, fmt.Errorf("invalid CA certs provided")
 		}
 		trustPinChecker.pinnedCAPool = caRootPool
 		return trustPinChecker, nil
